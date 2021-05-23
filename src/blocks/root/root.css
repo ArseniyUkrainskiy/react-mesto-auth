@@ -1,6 +1,6 @@
 /* Общие параметры стилей и шрифтов для страницы */
 .root {
-  max-width: 1280px;
+
   margin: 0 auto;
   background-color: #000;
   display: flex;

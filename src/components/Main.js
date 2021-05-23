@@ -2,34 +2,34 @@ import React from 'react'
 import api from '../utils/api'
 import Card from './Card'
 
-function Main({onEditAvatar, onEditProfile, onAddPlace}) {
+function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
+  const [userName, setUserName] = React.useState('Имя..')
+  const [userDescription, setUserDescription] = React.useState('О себе..')
+  const [userAvatar, setUserAvatar] = React.useState()
+  const [cards, setCards] = React.useState([])
 
-const [userName, setUserName] = React.useState('Имя..')
-const [userDescription, setUserDescription] = React.useState('О себе..')
-const [userAvatar, setUserAvatar] = React.useState()
-const [cards, setCards] = React.useState([])
-
-React.useEffect(()=>{
-  Promise.all([api.getUser(), api.getInitialCards()])
-  .then((data) => {
-    const [userData, cardsData] = data
-    setUserName(userData.name)
-    setUserDescription(userData.about)
-    setUserAvatar(userData.avatar)
-
-    /* myId = userData._id*/
-    setCards(cardsData)
-    
-  })
-  .catch((err) => {
-    console.log(`Ошибка при получении данных: ${err}`)
-  })
-}, [])
+  React.useEffect(() => {
+    Promise.all([api.getUser(), api.getInitialCards()])
+      .then((data) => {
+        const [userData, cardsData] = data
+        setUserName(userData.name)
+        setUserDescription(userData.about)
+        setUserAvatar(userData.avatar)
+        setCards(cardsData)
+      })
+      .catch((err) => {
+        console.log(`Ошибка при получении данных: ${err}`)
+      })
+  }, [])
 
   return (
     <main className="page">
       <section className="profile">
-        <button type="button" className="profile__avatar-edit" onClick={onEditAvatar} style={{ backgroundImage: `url(${userAvatar})` }}></button>
+        <button
+          type="button"
+          className="profile__avatar-edit"
+          onClick={onEditAvatar}
+          style={{ backgroundImage: `url(${userAvatar})` }}></button>
         <div className="profile__info">
           <div className="profile__info-edit">
             <h1 className="profile__info-name">{userName}</h1>
@@ -41,17 +41,19 @@ React.useEffect(()=>{
       </section>
 
       <section className="elements">
-        <ul className="elements__places">{
-          cards.map((card)=>{
+        <ul className="elements__places">
+          {cards.map((card) => {
             return (
-              <Card 
-              name={card.name}
-              key={card._id}
-              link={card.link}
-              likes={card.likes.length}/>
+              <Card
+                name={card.name}
+                key={card._id}
+                link={card.link}
+                likes={card.likes.length}
+                onCardClick={onCardClick}
+              />
             )
-          })
-        }</ul>
+          })}
+        </ul>
       </section>
     </main>
   )

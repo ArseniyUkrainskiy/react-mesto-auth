@@ -3,11 +3,15 @@ import Main from './Main'
 import Footer from './Footer'
 import React from 'react'
 import PopupWithForm from './PopupWithForm'
+import ImagePopup from './ImagePopup'
 
 function App() {
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false)
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false)
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false)
+  const [selectedCard, setSelectedCard] = React.useState(null)
+
+  const handleCardClick = ({ name, link }) => setSelectedCard({ name, link })
 
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true)
@@ -23,6 +27,7 @@ function App() {
     setEditAvatarPopupOpen(false)
     setEditProfilePopupOpen(false)
     setAddPlacePopupOpen(false)
+    setSelectedCard(null)
   }
 
   return (
@@ -32,9 +37,10 @@ function App() {
         onEditAvatar={handleEditAvatarClick}
         onEditProfile={handleEditProfileClick}
         onAddPlace={handleAddPlaceClick}
+        onCardClick={handleCardClick}
       />
       <Footer />
-
+      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       <PopupWithForm
         onClose={closeAllPopups}
         title="Редактировать профиль"
@@ -117,7 +123,6 @@ function App() {
         }
         isOpen={isEditAvatarPopupOpen}
       />
-
     </div>
   )
 }
