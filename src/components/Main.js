@@ -5,7 +5,7 @@ import Card from './Card'
 function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
   const [userName, setUserName] = React.useState('Имя..')
   const [userDescription, setUserDescription] = React.useState('О себе..')
-  const [userAvatar, setUserAvatar] = React.useState()
+  const [userAvatar, setUserAvatar] = React.useState(`https://rb.ru/media/upload_tmp/2018/d5.gif`)
   const [cards, setCards] = React.useState([])
 
   React.useEffect(() => {
