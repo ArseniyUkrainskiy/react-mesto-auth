@@ -76,7 +76,8 @@ export class Api {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify({
-        avatar: newAvatar['avatar-link'],
+        //avatar: newAvatar['avatar-link'],
+        avatar: newAvatar,
       }),
     }).then(this._checkResponse)
   }
