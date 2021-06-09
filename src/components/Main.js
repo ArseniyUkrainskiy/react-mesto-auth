@@ -9,9 +9,10 @@ function Main({
   onEditAvatar,
   onEditProfile,
   onAddPlace,
+  onRemovePlace,
   onCardClick,
   onCardLike,
-  onCardDelete,
+  //onCardDelete,
 }) {
   const currentUser = React.useContext(CurrentUserContext)
 
@@ -46,7 +47,8 @@ function Main({
                 ownerId={card.owner._id}
                 onCardClick={onCardClick}
                 onCardLike={onCardLike}
-                onCardDelete={onCardDelete}
+                //onCardDelete={onCardDelete}
+                onRemovePlace={onRemovePlace}
               />
             )
           })}

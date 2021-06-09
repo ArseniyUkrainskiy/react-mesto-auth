@@ -2,15 +2,17 @@ import Header from './Header'
 import Main from './Main'
 import Footer from './Footer'
 import React from 'react'
-import PopupWithForm from './PopupWithForm'
 import ImagePopup from './ImagePopup'
 import api from '../utils/api'
 import CurrentUserContext from '../contexts/CurrentUserContext'
 import EditProfilePopup from './EditProfilePopup'
 import EditAvatarPopup from './EditAvatarPopup'
 import AddPlacePopup from './AddPlacePopup'
+import ConfirmationPopup from './ConfirmationPopup'
 
 function App() {
+  const [currentUser, setCurrentUser] = React.useState({ name: 'Имя...', about: 'О себе..' })
+  const [cards, setCards] = React.useState([]) //Выполнено поднятие стейта
   React.useEffect(() => {
     //тут я получаю данные сразу по пользователю и карточке, так как нет смысла разделять их. Стейт-переменыне вынесены.
     Promise.all([api.getUser(), api.getInitialCards()])
@@ -24,14 +26,12 @@ function App() {
       })
   }, [])
 
-  const [currentUser, setCurrentUser] = React.useState({ name: 'Имя...', about: 'О себе..' })
-  const [cards, setCards] = React.useState([]) //Выполнено поднятие стейта
-
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false)
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false)
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false)
   const [isRemovePlacePopupOpen, setRemovePlacePopupOpen] = React.useState(false)
   const [selectedCard, setSelectedCard] = React.useState(null)
+  const [remCardId, setRemCardId] = React.useState('')
 
   const handleCardClick = ({ name, link }) => setSelectedCard({ name, link })
 
@@ -56,12 +56,13 @@ function App() {
           })
   }
 
-  function handleCardDelete({ cardId }) {
+  function handleCardDelete() {
     api
-      .removeCard(cardId)
+      .removeCard(remCardId)
       .then(() => {
         //исключить удаленную карточку из массива
-        setCards(cards.filter((card) => card._id !== cardId))
+        setCards(cards.filter((card) => card._id !== remCardId))
+        closeAllPopups()
       })
       .catch((err) => {
         console.log(`Ошибка при удалении карточки: ${err}`)
@@ -103,7 +104,7 @@ function App() {
         console.log(`Ошибка при добавлении новой карточки: ${err}`)
       })
   }
-//Красота!
+  //Красота!
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true)
   }
@@ -114,7 +115,8 @@ function App() {
     setAddPlacePopupOpen(true)
   }
 
-  function handleRemovePlaceClick() {
+  function handleRemovePlaceClick({ cardId }) {
+    setRemCardId(cardId)
     setRemovePlacePopupOpen(true)
   }
 
@@ -139,7 +141,7 @@ function App() {
             onRemovePlace={handleRemovePlaceClick}
             onCardClick={handleCardClick}
             onCardLike={handleCardLike} //Выполнено поднятие стейта
-            onCardDelete={handleCardDelete} //Выполнено поднятие стейта
+            //onCardDelete={handleCardDelete} //Выполнено поднятие стейта
           />
           <Footer />
           <EditProfilePopup
@@ -158,11 +160,10 @@ function App() {
             onAddPlace={handleAddPlaceSubmit}
           />
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-          <PopupWithForm
+          <ConfirmationPopup
             onClose={closeAllPopups}
-            title="Вы уверены ?"
-            name="remove-card"
             isOpen={isRemovePlacePopupOpen}
+            onCardDelete={handleCardDelete}
           />
         </div>
       </CurrentUserContext.Provider>

@@ -23,7 +23,9 @@ function EditAvatarPopup(props) {
       title="Обновить аватар"
       name="edit-avatar"
       isOpen={props.isOpen}
-      onSubmit={handleSubmit}>
+      onSubmit={handleSubmit}
+      btnText='Сохранить'
+      noValidate={false}>
       <input
         type="url"
         name="avatar-link"
@@ -33,7 +35,7 @@ function EditAvatarPopup(props) {
         id="avatar-link"
         ref={avatarRef}
       />
-      <span className="popup__error" id="avatar-link-error"></span>
+      {/* <span className="popup__error" id="avatar-link-error"></span> */}
     </PopupWithForm>
   )
 }

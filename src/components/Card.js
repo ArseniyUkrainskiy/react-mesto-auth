@@ -1,7 +1,7 @@
 import React from 'react'
 import CurrentUserContext from '../contexts/CurrentUserContext'
 //контекст в Card
-function Card({ cardId, name, link, likes, ownerId, onCardClick, onCardLike, onCardDelete }) {
+function Card({ cardId, name, link, likes, ownerId, onCardClick, onCardLike, onCardDelete, onRemovePlace }) {
   const currentUser = React.useContext(CurrentUserContext)
   const isOwn = ownerId === currentUser._id
   //лайк пользователя на карточке
@@ -15,7 +15,8 @@ function Card({ cardId, name, link, likes, ownerId, onCardClick, onCardLike, onC
     onCardLike({ likes, cardId })
   }
   function handleDeleteClick() {
-    onCardDelete({ cardId })
+    onRemovePlace({ cardId })
+    //onCardDelete({ cardId })
   }
   return (
     <li className="element">
