@@ -8,7 +8,7 @@
 * HTML, CSS, JS, webpack, API, JSX, react
 * Новый проект на Create React App в новом репозитории
 * Разметка портирована в JSX
-* Директория components с файлами App.js, Card.js, ImagePopup.js, PopupWithForm.js, Main.js, Header.js, Footer.js, AddPlacePopup.js, EditAvatarPopup.js, EditProfilePopup.js
+* Директория components: App.js, Card.js, ImagePopup.js, PopupWithForm.js, Main.js, Header.js, Footer.js, AddPlacePopup.js, EditAvatarPopup.js, EditProfilePopup.js
 * Директория contexts с файлом CurrentUserContext.js
 * Императивные обработчики, декларативный подход,
 модуль API использован стейт для данных из API, полноразмерная картинка при клике
@@ -20,5 +20,3 @@
 * В компонент App внедрён контекст через CurrentUserContext.Provider
 * В корневом компоненте App создана стейт-переменная currentUser. Она используется в качестве значения для провайдера контекста
 * Запросы к API описаны внутри компонента App
-* Работа с API. REST.
-* Аутентификации и авторизации пользователей
