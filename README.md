@@ -1,4 +1,4 @@
-# Проект 5.2: Место на React (authorization ) 
+# Проект 5.2: Место на React (authorization) 
 
 Портирование проекта на React.
 
