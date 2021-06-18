@@ -9,6 +9,11 @@ import EditProfilePopup from './EditProfilePopup'
 import EditAvatarPopup from './EditAvatarPopup'
 import AddPlacePopup from './AddPlacePopup'
 import ConfirmationPopup from './ConfirmationPopup'
+//1. Создайте нужные роуты и опишите перенаправления
+import { Route, Switch, Redirect } from 'react-router-dom'
+import Login from './Login'
+import Register from './Register'
+import ProtectedRoute from './ProtectedRoute'
 
 function App() {
   const [currentUser, setCurrentUser] = React.useState({ name: 'Имя...', about: 'О себе..' })
@@ -32,6 +37,7 @@ function App() {
   const [isRemovePlacePopupOpen, setRemovePlacePopupOpen] = React.useState(false)
   const [selectedCard, setSelectedCard] = React.useState(null)
   const [remCardId, setRemCardId] = React.useState('')
+  const [loggedIn, setLoggedIn] = React.useState(false)
 
   const handleCardClick = ({ name, link }) => setSelectedCard({ name, link })
 
@@ -133,16 +139,33 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
         <div className="root">
           <Header />
-          <Main
-            cards={cards}
-            onEditAvatar={handleEditAvatarClick}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onRemovePlace={handleRemovePlaceClick}
-            onCardClick={handleCardClick}
-            onCardLike={handleCardLike} //Выполнено поднятие стейта
-            //onCardDelete={handleCardDelete} //Выполнено поднятие стейта
-          />
+
+          <Switch>
+            {/* для регистрации пользователя */}
+            <Route exact path="/sign-up">
+              <Register />
+            </Route>
+            {/* для авторизации пользователя */}
+            <Route exact path="/sign-in">
+              <Login />
+            </Route>
+
+            <ProtectedRoute
+              path="/"
+              loggedIn={loggedIn}
+              component={Main}
+              cards={cards}
+              onEditAvatar={handleEditAvatarClick}
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onRemovePlace={handleRemovePlaceClick}
+              onCardClick={handleCardClick}
+              onCardLike={handleCardLike}
+            />
+            {/* Если неавторизованный пользователь приходит на сайт, он должен попадать на страницу входа, на какой бы роут он не пришёл. */}
+            <Route path="/">{loggedIn ? <Redirect to="/" /> : <Redirect to="sign-in" />}</Route>
+          </Switch>
+
           <Footer />
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
