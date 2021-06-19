@@ -1,7 +1,7 @@
 //общий компонент попапов
 import React from 'react'
 
-function PopupWithForm({ title, name, children, isOpen, onClose, onSubmit, btnState, btnText, noValidate }) {
+function PopupWithForm({ title, name, children, isOpen, onClose, onSubmit, btnState, btnText, noValidate, showBtn=true }) {
   return (
     <div className={`popup popup_type_${name} ${isOpen && 'popup_opened'}`}>
       <div className="popup__container">
@@ -9,12 +9,12 @@ function PopupWithForm({ title, name, children, isOpen, onClose, onSubmit, btnSt
         <h2 className="popup__title">{title}</h2>
         <form className="popup__form" name={name} noValidate={noValidate} onSubmit={onSubmit}>
           <fieldset className="popup__fieldset">{children}</fieldset>
-          <button
+          {showBtn && <button
             disabled={btnState}
             type="submit"
             className={`popup__submit ${btnState && 'popup__submit_disabled'}`}>
             {btnText}
-          </button>
+          </button>}
         </form>
       </div>
     </div>

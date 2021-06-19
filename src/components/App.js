@@ -1,16 +1,21 @@
 import Header from './Header'
 import Main from './Main'
 import Footer from './Footer'
-import React from 'react'
+
 import ImagePopup from './ImagePopup'
-import api from '../utils/api'
-import CurrentUserContext from '../contexts/CurrentUserContext'
 import EditProfilePopup from './EditProfilePopup'
 import EditAvatarPopup from './EditAvatarPopup'
 import AddPlacePopup from './AddPlacePopup'
 import ConfirmationPopup from './ConfirmationPopup'
-//1. Создайте нужные роуты и опишите перенаправления
-import { Route, Switch, Redirect } from 'react-router-dom'
+import InfoTooltip from './InfoTooltip'
+
+import React from 'react'
+import { Route, Switch, Redirect, useHistory } from 'react-router-dom'
+
+import api from '../utils/api'
+import * as auth from '../utils/auth'
+
+import CurrentUserContext from '../contexts/CurrentUserContext'
 import Login from './Login'
 import Register from './Register'
 import ProtectedRoute from './ProtectedRoute'
@@ -25,6 +30,7 @@ function App() {
         const [userData, cardsData] = data
         setCurrentUser(userData)
         setCards(cardsData)
+        //checkToken()
       })
       .catch((err) => {
         console.log(`Ошибка при получении данных: ${err}`)
@@ -37,7 +43,14 @@ function App() {
   const [isRemovePlacePopupOpen, setRemovePlacePopupOpen] = React.useState(false)
   const [selectedCard, setSelectedCard] = React.useState(null)
   const [remCardId, setRemCardId] = React.useState('')
+  //хранение состояния авторизации (true/false)
   const [loggedIn, setLoggedIn] = React.useState(false)
+  //хранение email авторизированного пользователя
+  const [userEmail, setUserEmail] = React.useState({ email: '' })
+  //хранение состояния открытия попапа, успеха или ошибки регистрации
+  const [isInfoPopupOpen, setInfoPopupOpen] = React.useState(false)
+  const [isRegStatus, setRegStatus] = React.useState(null)
+  const history = useHistory()
 
   const handleCardClick = ({ name, link }) => setSelectedCard({ name, link })
 
@@ -61,7 +74,6 @@ function App() {
             console.log(`Ошибка при получении данных карточки во время лайка: ${err}`)
           })
   }
-
   function handleCardDelete() {
     api
       .removeCard(remCardId)
@@ -74,7 +86,6 @@ function App() {
         console.log(`Ошибка при удалении карточки: ${err}`)
       })
   }
-
   function handleUpdateUser({ name, about }) {
     api
       .editUserInfo({ name, about })
@@ -86,7 +97,6 @@ function App() {
         console.log(`Ошибка при редактировании профиля: ${err}`)
       })
   }
-
   function handleUpdateAvatar({ avatar }) {
     api
       .updateAvatar(avatar)
@@ -98,7 +108,6 @@ function App() {
         console.log(`Ошибка при редактировании аватара: ${err}`)
       })
   }
-
   function handleAddPlaceSubmit({ name, link }) {
     api
       .createNewCard({ name, link })
@@ -110,7 +119,6 @@ function App() {
         console.log(`Ошибка при добавлении новой карточки: ${err}`)
       })
   }
-  //Красота!
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true)
   }
@@ -120,34 +128,92 @@ function App() {
   function handleAddPlaceClick() {
     setAddPlacePopupOpen(true)
   }
-
   function handleRemovePlaceClick({ cardId }) {
     setRemCardId(cardId)
     setRemovePlacePopupOpen(true)
   }
-
   function closeAllPopups() {
     setEditAvatarPopupOpen(false)
     setEditProfilePopupOpen(false)
     setAddPlacePopupOpen(false)
     setRemovePlacePopupOpen(false)
     setSelectedCard(null)
+    setInfoPopupOpen(false)
   }
 
+  const handleRegister = (password, email) => {
+    auth
+      .register({ password, email })
+      .then((data) => {
+        const JWT = data.data._id //вытащить токен
+        JWT && localStorage.setItem('jwt', JWT) //если есть токен записать его
+        setUserEmail({ email: data.data.email })
+        setInfoPopupOpen(true)
+        setRegStatus(true)
+        setLoggedIn(true)
+        history.push('/sign-in')
+      })
+      .catch((err) => {
+        setInfoPopupOpen(true)
+        setRegStatus(false)
+        console.log(`Ошибка при регистрации нового пользователя.register: ${err}`)
+      })
+  }
+  const handleLogin = ({ password, email }) => {
+    auth
+      .login({ password, email })
+      .then((res) => {
+        const JWT = res.token
+        JWT && localStorage.setItem('jwt', JWT)
+        setUserEmail({ email })
+        setLoggedIn(true)
+        history.push('/')
+      })
+      .catch((err) => {
+        setInfoPopupOpen(true)
+        setRegStatus(false)
+        console.log(`Ошибка при авторизации пользователя.login: ${err}`)
+      })
+  }
+  const handleLogOut = (e) => {
+    e.preventDefault()
+    localStorage.removeItem('jwt')
+    setLoggedIn(false)
+    history.push('/sign-in')
+  }
+
+  const checkToken = React.useCallback(() => {
+    const JWT = localStorage.getItem('jwt')
+    JWT &&
+      auth
+        .checkToken(JWT)
+        .then((data) => {
+          setUserEmail({ email: data.data.email })
+          setLoggedIn(true)
+          history.push('/')
+        })
+        .catch((err) => {
+          console.log(`Ошибка при проверке токена пользователя.checkToken: ${err}`)
+        })
+  }, [history])
+
+  React.useEffect(() => {
+    checkToken()
+  }, [checkToken])
   return (
     <>
       <CurrentUserContext.Provider value={currentUser}>
         <div className="root">
-          <Header />
+          <Header userEmail={userEmail} logOut={handleLogOut} />
 
           <Switch>
             {/* для регистрации пользователя */}
             <Route exact path="/sign-up">
-              <Register />
+              <Register handleRegister={handleRegister} />
             </Route>
             {/* для авторизации пользователя */}
             <Route exact path="/sign-in">
-              <Login />
+              <Login handleLogin={handleLogin} />
             </Route>
 
             <ProtectedRoute
@@ -167,6 +233,11 @@ function App() {
           </Switch>
 
           <Footer />
+          <InfoTooltip
+            isOpen={isInfoPopupOpen}
+            onClose={closeAllPopups}
+            isRegStatus={isRegStatus}
+          />
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}

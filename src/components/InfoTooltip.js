@@ -6,13 +6,16 @@ import errorElement from '../blocks/popup/__infoTool-img/images/registration-err
 
 function InfoTooltip(props) {
   return (
-    <PopupWithForm>
+    <PopupWithForm onClose={props.onClose} isOpen={props.isOpen} showBtn={false}>
       <>
-        <img className="popup__infoTool-img" src={true ? done : errorElement}></img>
+        <img
+          className="popup__infoTool-img"
+          src={props.isRegStatus ? done : errorElement}
+          alt="статус авторизации"></img>
         <p className="popup__infoTool-message">
-          {true
-            ? `Вы успешно${(<br />)}зарегистрировались!`
-            : `Что-то пошло не так!${(<br />)}
+          {props.isRegStatus
+            ? `Вы успешно${' '}зарегистрировались!`
+            : `Что-то пошло не так!${' '}
 Попробуйте ещё раз.`}
         </p>
       </>
