@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import AuthForm from './AuthForm.js'
 import { Link } from 'react-router-dom'
 
-function Register({ handleRegister }) {
+function Register({ onRegister }) {
   const [data, setData] = useState({ password: '', email: '' })
 
   function handleChange(e) {
@@ -12,7 +12,7 @@ function Register({ handleRegister }) {
   function handleSubmit(e) {
     e.preventDefault()
     const { password, email } = data
-    handleRegister(password, email)
+    onRegister(password, email)
   }
   return (
     <AuthForm

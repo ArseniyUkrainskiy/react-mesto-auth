@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import logo from '../images/logo.svg'
 import { Link, useLocation } from 'react-router-dom'
 
-function Header({ userEmail, logOut }) {
+function Header({ userEmail, onSignOut }) {
   const [caption, setCaption] = useState({
     link: '',
     linkName: '',
@@ -41,7 +41,7 @@ function Header({ userEmail, logOut }) {
         </span>
       )}
       {caption.email ? (
-        <button onClick={logOut} className="auth__caption-button">
+        <button onClick={onSignOut} className="auth__caption-button">
           {caption.linkName}
         </button>
       ) : (

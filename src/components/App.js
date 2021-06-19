@@ -204,16 +204,16 @@ function App() {
     <>
       <CurrentUserContext.Provider value={currentUser}>
         <div className="root">
-          <Header userEmail={userEmail} logOut={handleLogOut} />
+          <Header userEmail={userEmail} onSignOut={handleLogOut} />
 
           <Switch>
             {/* для регистрации пользователя */}
             <Route exact path="/sign-up">
-              <Register handleRegister={handleRegister} />
+              <Register onRegister={handleRegister} />
             </Route>
             {/* для авторизации пользователя */}
             <Route exact path="/sign-in">
-              <Login handleLogin={handleLogin} />
+              <Login onLogin={handleLogin} />
             </Route>
 
             <ProtectedRoute
