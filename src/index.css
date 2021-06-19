@@ -75,3 +75,5 @@
 @import url(./blocks/popup/__infoTool-message/popup__infoTool-message.css);
 @import url(./blocks/auth/__caption-link/_header/auth__caption-link_header.css);
 @import url(./blocks/auth/__caption-button/auth__caption-button.css);
+
+@import url(./blocks/popup/__container-status/popup__container-status.css);
