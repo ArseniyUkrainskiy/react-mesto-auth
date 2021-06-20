@@ -3,6 +3,7 @@ import logo from '../images/logo.svg'
 import { Link, useLocation } from 'react-router-dom'
 
 function Header({ userEmail, onSignOut }) {
+  const [burger, setBurger] = useState(false)
   const [caption, setCaption] = useState({
     link: '',
     linkName: '',
@@ -25,31 +26,62 @@ function Header({ userEmail, onSignOut }) {
         setCaption({ link: '/sign-in', linkName: 'Войти' })
         break
     }
-  }, [location, userEmail])
+  }, [location, userEmail.email])
+
+  function handleBurger(e) {
+    e.preventDefault()
+    setBurger(!burger)
+  }
+
   return (
-    <header className="header">
-      <img className="header__logo" src={logo} alt="Место" />
-      {userEmail && (
-        <span
+    <>
+      {burger && (
+        <div
           style={{
-            color: '#fff',
-            fontSize: '18',
-            lineHeight: '22px',
-            marginRight: '24px',
+            minHeight: '142px',
+            borderBottom: '1px solid rgba(84, 84, 84, 0.7)',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}>
-          {caption.email}
-        </span>
+          {userEmail && (
+            <span className="auth__caption-email auth__caption-email_active">{caption.email}</span>
+          )}
+          {caption.email ? (
+            <button
+              onClick={onSignOut}
+              className="auth__caption-button auth__caption-button_active">
+              {caption.linkName}
+            </button>
+          ) : (
+            <Link className="auth__caption-link auth__caption-link_header" to={caption.link}>
+              {caption.linkName}
+            </Link>
+          )}
+        </div>
       )}
-      {caption.email ? (
-        <button onClick={onSignOut} className="auth__caption-button">
-          {caption.linkName}
-        </button>
-      ) : (
-        <Link className="auth__caption-link auth__caption-link_header" to={caption.link}>
-          {caption.linkName}
-        </Link>
-      )}
-    </header>
+      <header className="header">
+        <img className="header__logo" src={logo} alt="Место" />
+        {caption.email && (
+          <button
+            className={`header__btn-burger ${burger && 'header__btn-burger_active'}`}
+            onClick={handleBurger}>
+            <span></span>
+          </button>
+        )}
+        {userEmail && <span className="auth__caption-email">{caption.email}</span>}
+        {caption.email ? (
+          <button onClick={onSignOut} className="auth__caption-button">
+            {caption.linkName}
+          </button>
+        ) : (
+          <Link className="auth__caption-link auth__caption-link_header" to={caption.link}>
+            {caption.linkName}
+          </Link>
+        )}
+      </header>
+    </>
   )
 }
 

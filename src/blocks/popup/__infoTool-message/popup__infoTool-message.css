@@ -7,3 +7,9 @@
   max-width: 358px;
   text-align: center;
 }
+@media screen and (max-width: 320px) {
+  .popup__infoTool-message {
+    font-size: 20px;
+    line-height: 24px;
+  }
+}

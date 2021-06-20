@@ -13,3 +13,8 @@
   opacity: 0.8;
   transition: 0.8s;
 }
+@media screen and (max-width: 540px) {
+  .auth__caption-button {
+    display: none;
+  }
+}

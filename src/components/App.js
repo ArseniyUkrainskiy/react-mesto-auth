@@ -141,6 +141,13 @@ function App() {
     setInfoPopupOpen(false)
   }
 
+  /*  function closeAllPopupsOverlay(e) {
+    if (e.target === e.currentTarget || e.key === 'Escape') {
+      console.log(e);
+      closeAllPopups()
+    }
+  } */
+
   const handleRegister = (password, email) => {
     auth
       .register({ password, email })
