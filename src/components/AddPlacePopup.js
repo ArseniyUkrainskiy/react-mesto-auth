@@ -23,8 +23,8 @@ function AddPlacePopup(props) {
     e.preventDefault()
     setBtnText('Сохранение...') //при отправке данных на сервер
     props.onAddPlace({ name: cardName, link: cardUrl })
-    e.target.reset()
   }
+
   return (
     <PopupWithForm
       onClose={props.onClose}
