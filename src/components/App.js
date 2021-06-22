@@ -224,6 +224,7 @@ function App() {
             </Route>
 
             <ProtectedRoute
+              exact
               path="/"
               loggedIn={loggedIn}
               component={Main}
