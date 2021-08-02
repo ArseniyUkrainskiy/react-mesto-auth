@@ -3,7 +3,7 @@
 Портирование проекта на React. :atom_symbol:
 
 * БЭМ, ООП
-* HTML, CSS, JS, webpack, API, JSX, react
+* HTML, CSS, JS, webpack, API, JSX, React
 * Новый проект на Create React App в новом репозитории
 * Разметка портирована в JSX
 * Директория components: App.js, Card.js, ImagePopup.js, PopupWithForm.js, Main.js, Header.js, Footer.js, AddPlacePopup.js, EditAvatarPopup.js, EditProfilePopup.js
